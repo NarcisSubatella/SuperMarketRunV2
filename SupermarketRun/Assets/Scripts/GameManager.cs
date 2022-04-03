@@ -10,39 +10,37 @@ public class GameManager : MonoBehaviour
 	public static GameManager Instance;
 
 	[SerializeField] GameObject LvManagerPrefab;
-	
-	[Header("PrincipalPanels")]
-	public GameObject GameCompletedPanel;
-	public GameObject GameOverPanel;
-	public GameObject StartGamePanel;
 
-	public bool PlayerMove;
-	[HideInInspector]
-	public bool isStartGame = true;
-	public GameObject losigCartPrefab;
-	public List<GameObject> shoppingCarts = new List<GameObject>();
+
+	[HideInInspector] public bool PlayerMove;
+	[HideInInspector] public bool isStartGame = true;
+
+	[Header("Shopping cars")]
+	public GameObject losigCartPrefab; /*Prefab del carro que se perdera al contactar un obstaculo */
+	public List<GameObject> shoppingCarts = new List<GameObject>(); /*Total carros */
+	[SerializeField] private Transform sCartsParent; /*Padre contenedor de los carros */
+	public GameObject cartToCase; /*Prebab de los carros instanciados al llegar a la zona final y que realizaran la animacion para llegar a las cajas*/
 
 	[Header("Points")]
-	[SerializeField]private int coinsSaved;
-	public int pointsCarBonus = 0;
-	public int productsObtained = 0;
+	private int coinsSaved;
+	[HideInInspector] public int pointsCarBonus = 0;
+	[HideInInspector] public int productsObtained = 0;
 	[SerializeField] private Text globalCoints;
 	private float totalPoints;
-	[SerializeField]private float sumTime;
-    [SerializeField]private float countinPointsSpeed;
-	public GameObject cartToCase;
+	private float sumTime;
+	[SerializeField] private float countinPointsSpeed;
 	private int finalNum;
-	public ParticleSystem[] particleSys;
-	[HideInInspector]
-	public bool getPrice = false;
+	[HideInInspector] public bool getPrice = false;
 	private bool x2Points = false;
-	
+	public bool redy = false;
 
-	[SerializeField] private Transform sCartsParent;
+
 	[Header("NemesisSettings")]
 	public GameObject nemesisPrefab;
 	public Transform[] namesisTriguerLeft;
 	public Transform[] namesisTriguerRight;
+
+	//Camaras y posiciones de travelling
 	[Header("Cameras")]
 	public Camera[] cameras;
 	[HideInInspector]
@@ -54,31 +52,37 @@ public class GameManager : MonoBehaviour
 	[SerializeField] Transform posCamSeg2;
 	[SerializeField] Transform posCamEnd;
 	[SerializeField] Transform posCameraMMM;
-	[SerializeField] float speedCamMove =0.2f;
+	[SerializeField] float speedCamMove = 0.2f;
 
-	[HideInInspector]
-	public bool redy = false;
 
-	[Header("InstaceCarts")]
-	[SerializeField]private GameObject cartToInstace;
-	[SerializeField]private Transform[] instaceCartsPoints;
+	[Header("Instace Obstacle Carts")]
+	[SerializeField] private GameObject cartToInstace; /*Prefab de obstaculo coches rojos */
+	[SerializeField] private Transform[] instaceCartsPoints; /*Liata de puntos de respawn de los coches*/
 
-	[Header("CanvasControl")]
-	[SerializeField] GameObject canvas;
-	[SerializeField] private GameObject menuPanel;
-	public Image speddEffectImg;
+	//Canvas settings
+	private GameObject GameCompletedPanel;
+	private GameObject GameOverPanel;
+	private GameObject StartGamePanel;
+	private GameObject canvas;
+	private GameObject menuPanel;
+	[HideInInspector] public Image speddEffectImg;
 	[SerializeField] private Transform endPos;
-	[SerializeField] private Slider lvProgressSlider;
+	private Slider lvProgressSlider;
 	private float checkDistanceToFisnish;
 	private float totalDistanceToFinish;
 	private Transform playerPos;
 	[HideInInspector] public bool arrivedEndPos = false;
-	[SerializeField] TMP_Text sliderActualLevel;
-	[SerializeField] TMP_Text sliderNextLevel;
-	[SerializeField] GameObject buttonGetCoin;
-	[SerializeField] private Text cointx2;
-	[SerializeField] private Text cointsTxt;
-	[SerializeField] private Text lvCompleted;
+	private TMP_Text sliderActualLevel;
+	private TMP_Text sliderNextLevel;
+	private GameObject buttonGetCoin;
+	private Text cointx2;
+	private Text cointsTxt;
+	private Text lvCompleted;
+
+	public ParticleSystem[] particleSys; /*Array de particulas que se utilizaran es distintas zonas del juego */
+
+
+
 	private void Awake()
 	{
 		if(Instance == null)
