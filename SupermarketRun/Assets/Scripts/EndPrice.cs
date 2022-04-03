@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EndPrice : MonoBehaviour
 {
+    //Scipt que contienen los Premios finales, controla la rotación constante de este y las particulas que se activarán al obtenerlos
+
     public ParticleSystem[] particleEfects;
     private Transform price;
 
@@ -15,7 +17,6 @@ public class EndPrice : MonoBehaviour
     private void Update()
     {
        price.Rotate(50 * Time.deltaTime, 0 , 0 );
-
     }
     public IEnumerator GetingPrice()
     {
@@ -35,7 +36,7 @@ public class EndPrice : MonoBehaviour
        // yield return new WaitForSeconds(0.5f);
         //particleEfects[6].Play();
 
-
+        //Tras la activación d eparticulas, se llama la función para terminar el nivel
         GameManager.Instance.GameCompleted();
 
     }

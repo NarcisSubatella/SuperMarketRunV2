@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class followPlayer : MonoBehaviour
 {
+	//Vinculado al padre del PJ
+
 	public static followPlayer Instance;
 	public float speed;
 	public float internalSpeed;
@@ -16,6 +18,8 @@ public class followPlayer : MonoBehaviour
 	public float speedProgress = 0;
 	[HideInInspector]
 	public bool arivedMMM;
+
+
 	private void Awake()
 	{
 		if (Instance == null)
@@ -23,20 +27,19 @@ public class followPlayer : MonoBehaviour
 			Instance = this;
 		}
 	}
-	// Start is called before the first frame update
+
 	void Start()
     {
 		internalSpeed = speed;
 	}
 
-    // Update is called once per frame
     void FixedUpdate()
     {
 		if(GameManager.Instance.PlayerMove)
 		{
 			if(arivedMMM == false)
             {
-				if(IsBoost)
+				if(IsBoost)/*aplica booster */
                 {
 					if (internalTimerBoost > 0)
 					{
@@ -54,6 +57,7 @@ public class followPlayer : MonoBehaviour
 
 					}
 				}
+				//Progresion de la velocidad hasta llegar a la velocidad maxima
 				if(speedProgress< speed)
 				{
 				speedProgress= speedProgress + 0.09f;
@@ -61,6 +65,7 @@ public class followPlayer : MonoBehaviour
 
 				transform.Translate(new Vector3(0, 0, speedProgress) * Time.deltaTime);
 			}
+			//Desminucion progresiva de velociadad al llegar al MMM
 			if (arivedMMM == true)
 			{
 				if (speedProgress > speed)
@@ -74,7 +79,7 @@ public class followPlayer : MonoBehaviour
 				
 	}
 
-
+	//Funcion del boost de velocidad
 	public void BoastActivate()
 	{
 		IsBoost = true;
@@ -82,11 +87,5 @@ public class followPlayer : MonoBehaviour
 		speed = boost;
 		GameManager.Instance.speddEffectImg.enabled = true;
 		GetComponentInChildren<Animator>().speed = 3;
-	}
-
-	IEnumerator BoastReset()
-	{
-		yield return new WaitForSeconds(0.5f);
-		//boast = 0;
 	}
 }

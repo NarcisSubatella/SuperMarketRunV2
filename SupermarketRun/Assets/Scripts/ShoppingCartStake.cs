@@ -7,29 +7,33 @@ public class ShoppingCartStake : MonoBehaviour
 {
    [SerializeField] public bool carIsEnabled;
    [SerializeField] private float puppingScale;
-    //[SerializeField] private int springStaking;
-    // [SerializeField] private int damperSpring;
+
     [Header("OptionsToCase")]
     [SerializeField] private float cartToCaseSpeed = 1f;
     private GameObject cartToCaseInsta;
     private bool goToCase = false;
-    [SerializeField]private Vector3 casePos;
-    [SerializeField]private TextMesh caseText;
+    private TextMesh caseText;
+    private Vector3 casePos;
     private bool countingPoints = false;
     [Header("Select just first cart")]
-    [SerializeField]private bool firstCart=false;
-   [SerializeField] private GameObject player;
-   [SerializeField] private ParticleSystem particleEnd;
-    public List<GameObject> producsCar = new List<GameObject>();
+    [SerializeField]private bool firstCart=false; /*Debe indicarse en el inspector cual es el ultimoi carro */
+   
+    private GameObject player;
+    private ParticleSystem particleEnd;
+
+    public List<GameObject> producsCar = new List<GameObject>(); /*productos de cada carro */
 
 
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+
+        //Inicializa la lista de productos en el carro
         for (int i=0;i<transform.childCount;i++)
         {
             producsCar.Add(transform.GetChild(i).gameObject);
         }
+        //Una vez inicializada la lista, los desacticva
         foreach (GameObject products in producsCar)
         {
             products.SetActive(false);
@@ -37,108 +41,106 @@ public class ShoppingCartStake : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        player = GameObject.FindGameObjectWithTag("Player");
+        //Al contactar un NPC Shopper
         if (other.gameObject.CompareTag("Shopper")&& other.gameObject.GetComponent<Shopper>().pointisgiven==false)
         {
-            if (player.GetComponentInParent<followPlayer>().IsBoost==false)
+            //Ya no se utiliza, es para reletizar al Pj tras constactar a un NPC Shopper
+           /* if (player.GetComponentInParent<followPlayer>().IsBoost==false)
             {
             player.GetComponentInParent<followPlayer>().speedProgress = 2;
-            }
-            //StartCoroutine(player.GetComponent<PlayerControl>().PushedPj());
+            }*/
+
             Shopper shopper = other.gameObject.GetComponent<Shopper>();
-            StakeShoppingCart();
-            shopper.GivePoints();
-            other.GetComponent<Shopper>().HittedNPC();
+            StakeShoppingCart(); /*Añade un carro al PJ*/
+            shopper.GivePoints(); /*Contaviliza un carro añadido */
+            other.GetComponent<Shopper>().HittedNPC(); /*Acciones ocurridas al NPC */
 
         }
+
+        //Al contactar con un obstaculo
         if (other.gameObject.CompareTag("Obstacle"))
         {
-            carIsEnabled = false;
-            player.GetComponentInParent<followPlayer>().speedProgress = 2;
-            Instantiate(GameManager.Instance.particleSys[2], (transform.position), Quaternion.identity);
-            GameObject cartInstance = Instantiate(GameManager.Instance.losigCartPrefab, transform.position, transform.rotation,transform);
-            Destroy(cartInstance, 2);
-            GameManager.Instance.pointsCarBonus -= 1;
-            ReconectAfterCollision();
+            //player.GetComponentInParent<followPlayer>().speedProgress = 2;
 
+            carIsEnabled = false; /*se desactiva el carro que contacto */
+            Instantiate(GameManager.Instance.particleSys[2], (transform.position), Quaternion.identity); /*Efecto particulas*/
+            GameObject cartInstance = Instantiate(GameManager.Instance.losigCartPrefab, transform.position, transform.rotation,transform); /*Se instacia un carro con la animación de perdida de carro */
+            Destroy(cartInstance, 2); /*Se destruya el carro intanciado */
+            GameManager.Instance.pointsCarBonus -= 1; /*Se resta 1 a la contavilidad de carros */
+            ReconectAfterCollision(); /*Reconecta los carros activos restantes*/
 
+            /*Game Over si se desactivca el ultimo carro*/
             if(GameManager.Instance.shoppingCarts[1].GetComponent<ShoppingCartStake>().carIsEnabled == false)
             {
               GameManager.Instance.GameOver();
             }
         }
+
+        //Al contactar con un ittem colectable
         if (other.CompareTag("Product"))
         {
-            Debug.Log("Touch");
             other.GetComponent<Collider>().enabled = false;
-            Instantiate(GameManager.Instance.particleSys[3], (transform.position), Quaternion.identity);
-            GameManager.Instance.productsObtained++;
+            Instantiate(GameManager.Instance.particleSys[3], (transform.position), Quaternion.identity); /*Efevto partiuculas */
+            GameManager.Instance.productsObtained++;/*Contaviliza el item*/
             Destroy(other.gameObject);
-            Transform animationHolder = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerControl>().productAnim;
+            Transform animationHolder = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerControl>().productAnim; /*Busca el contenedor de la animacion de recoleccion */
 
-            //GameObject product = Instantiate(other.gameObject, animationHolder ,animationHolder.position,animationHolder.rotation);
-          //  product.transform.SetParent(animationHolder);
-            animationHolder.GetComponent<Animator>().SetTrigger("Take");
-            GetComponentInParent<ShoppingCarsHolder>().GetProducts();
+            animationHolder.GetComponent<Animator>().SetTrigger("Take"); /*Activa animación de recoger item */
+            GetComponentInParent<ShoppingCarsHolder>().GetProducts(); /*Función de visualización de productos en el carro, se activa un item */
         }
+
+        //Al llegar a la zona de cajas
         if (other.CompareTag("Case"))
         {
-            caseText = other.transform.GetChild(1).GetComponent<TextMesh>();
+            
+            caseText = other.transform.GetChild(1).GetComponent<TextMesh>();/*Recoge el texto para mostrar la puntuación*/
             countingPoints = true;
             other.gameObject.GetComponent<Collider>().enabled = false;
-            carIsEnabled = false;
-            cartToCaseInsta = Instantiate(GameManager.Instance.cartToCase, transform.position, transform.rotation, transform);
-            particleEnd = other.GetComponentInChildren<ParticleSystem>();
+            carIsEnabled = false;/*Desactiva un carro*/
+            cartToCaseInsta = Instantiate(GameManager.Instance.cartToCase, transform.position, transform.rotation, transform); /*Instacia un carro con la animacion de desplazamiento a la caja de cobro */
+            particleEnd = other.GetComponentInChildren<ParticleSystem>(); /*Efecto particulas */
 
             if(firstCart == false)
             {
             
             cartToCaseInsta.transform.SetParent(null);
-           //particle = other.transform.GetChild(2).GetComponent<ParticleSystem>();
 
             }
-
+            //si es el ultimo carro
             if(firstCart == true)
             {
-            player = GameObject.FindGameObjectWithTag("Player");
-            player.GetComponentInParent<followPlayer>().enabled = false;
+            player.GetComponentInParent<followPlayer>().enabled = false;/*Para el PJ*/
             player.GetComponent<PlayerControl>().enabled = false;
-            GameManager.Instance.moveCamToEndPos = true;
+            GameManager.Instance.moveCamToEndPos = true; /*Activa travelling camera */
 
-            Debug.Log(player.gameObject.name);
             }
             goToCase = true;
-            casePos = other.transform.GetChild(0).transform.position;
+            casePos = other.transform.GetChild(0).transform.position; /*Almacena la posicion dende devera de dirigirse el carro */
         }
+        //Al llegar a la meta final
         if (other.CompareTag("EndPrice"))
         {
-            caseText = other.transform.GetChild(1).GetComponent<TextMesh>();
+            caseText = other.transform.GetChild(1).GetComponent<TextMesh>();/*Recoge el texto para mostrar la puntuación*/
             countingPoints = true;
             other.gameObject.GetComponent<Collider>().enabled = false;
             carIsEnabled = false;
             cartToCaseInsta = Instantiate(GameManager.Instance.cartToCase, transform.position, transform.rotation, transform);
             particleEnd = other.GetComponentInChildren<ParticleSystem>();
 
-        /*    if(firstCart == false)
-            {
-            cartToCaseInsta.transform.SetParent(null);
-           //particle = other.transform.GetChild(2).GetComponent<ParticleSystem>();
-
-            }*/
-
-            player = GameObject.FindGameObjectWithTag("Player");
             player.GetComponentInParent<followPlayer>().enabled = false;
             player.GetComponent<PlayerControl>().enabled = false;
             GameManager.Instance.moveCamToEndPos = true;
             goToCase = true;
             casePos = other.transform.GetChild(0).transform.position;
             GameManager.Instance.getPrice = true;
-            StartCoroutine(other.GetComponentInParent<EndPrice>().GetingPrice());
+            StartCoroutine(other.GetComponentInParent<EndPrice>().GetingPrice()); /*Lanza todas las particulas y finaleiza el nivel */
         }
     }
     private void Update()
     {
         ActiveShoppingCart();
+
+        //Envia los carros a las cajas correspondientes al llegar al MMM
         if(goToCase)
         {
             
@@ -180,16 +182,13 @@ public class ShoppingCartStake : MonoBehaviour
            GameManager.Instance.CountingPoints(caseText);
         }
     }
+    //Activa o desactiva el carro
     private void ActiveShoppingCart()
     {
     if(carIsEnabled)
         {
             GetComponent<MeshRenderer>().enabled = true;
             GetComponent<Collider>().enabled = true;
-           /* foreach (GameObject products in producsCar)
-            {
-                products.SetActive(true);
-            }*/
         }
     else
         {
@@ -201,6 +200,7 @@ public class ShoppingCartStake : MonoBehaviour
             }
         }
     }
+    //Añade un carro al PJ
     public void StakeShoppingCart()
     {
         List<GameObject> cartsActive = GameManager.Instance.shoppingCarts;
@@ -218,6 +218,7 @@ public class ShoppingCartStake : MonoBehaviour
 
         }
     }
+    // En caso de perder algun carro que no sea el último, actualiza los carros activos para que no queden vacios en la cola de carros
     public void ReconectAfterCollision()
     {
         List<GameObject> cartsActive = GameManager.Instance.shoppingCarts;

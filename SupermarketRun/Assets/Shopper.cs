@@ -112,12 +112,13 @@ public class Shopper : MonoBehaviour
 			{
 				GameManager.Instance.pointsCarBonus += 1;
 			}
-			else if (type == ShopperType.StandingShopper)
+
+		/*	else if (type == ShopperType.StandingShopper)
 			{
 				GameManager.Instance.pointsCarBonus += 1;
-			}
+			}*/
 			//followPlayer.Instance.BoastActivate(5);
-			pointisgiven = true;
+			pointisgiven = true; /*âra que solo añada una vez al Int */
 		}
 		
 	}
@@ -193,53 +194,6 @@ public class Shopper : MonoBehaviour
 				productsOnCart[i].gameObject.SetActive(true);
 			}
 		}
-
-		/*switch (productsCount)
-        {
-			case 1:
-				for(int i=0; i< productsOnCart.Length; i++)
-                {
-					if (i > 1)
-					{
-						productsOnCart[i].gameObject.SetActive(false);
-					}
-					else
-					{
-						productsOnCart[i].gameObject.SetActive(true);
-					}
-				}
-				break;
-			case 2:
-                {
-					for (int i = 0; i < productsOnCart.Length; i++)
-					{
-						if (i > 2)
-						{
-							productsOnCart[i].gameObject.SetActive(false);
-						}
-						else
-                        {
-							productsOnCart[i].gameObject.SetActive(true);
-						}
-					}
-					break;
-				}
-			case 3:
-                {
-					for (int i = 0; i < productsOnCart.Length; i++)
-					{
-						if (i > 3)
-						{
-							productsOnCart[i].gameObject.SetActive(false);
-						}
-						else
-						{
-							productsOnCart[i].gameObject.SetActive(true);
-						}
-					}
-					break;
-				}
-        }*/
 	}
     private void OnTriggerEnter(Collider other)
     {

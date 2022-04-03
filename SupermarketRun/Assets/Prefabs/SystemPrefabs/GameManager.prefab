@@ -44,27 +44,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LvManagerPrefab: {fileID: 2853534520200598396, guid: b04ca9b81e7caeb47bf5396927c321e0, type: 3}
-  GameCompletedPanel: {fileID: 0}
-  GameOverPanel: {fileID: 0}
-  StartGamePanel: {fileID: 0}
   PlayerMove: 0
   isStartGame: 1
   losigCartPrefab: {fileID: 6682667832791441479, guid: acafa3085f8ea304e918bb10ac1d91f6, type: 3}
   shoppingCarts: []
-  coinsSaved: 0
+  sCartsParent: {fileID: 0}
+  cartToCase: {fileID: 8425793643456062554, guid: 3ff19c1bf21e239438ff2643599de342, type: 3}
   pointsCarBonus: 0
   productsObtained: 0
   globalCoints: {fileID: 0}
-  sumTime: 0
   countinPointsSpeed: 2
-  cartToCase: {fileID: 8425793643456062554, guid: 3ff19c1bf21e239438ff2643599de342, type: 3}
-  particleSys:
-  - {fileID: 8578201275120907588, guid: 4f7f399e1cb43334eb5f19e91efd66ad, type: 3}
-  - {fileID: 2724714365057204167, guid: 91e77c072176bfc4cbc016ff6fce16b1, type: 3}
-  - {fileID: 2898502399360044284, guid: 164d10ca72a9db1409d39a11eb24a133, type: 3}
-  - {fileID: 959829160015727636, guid: 70bcf3a0b65796d49a96066ba3d96b89, type: 3}
   getPrice: 0
-  sCartsParent: {fileID: 0}
+  redy: 0
   nemesisPrefab: {fileID: 318682992703922460, guid: ac6abd0b26c42584fa5f20fb0a20a464, type: 3}
   namesisTriguerLeft:
   - {fileID: 0}
@@ -80,18 +71,13 @@ MonoBehaviour:
   posCamEnd: {fileID: 0}
   posCameraMMM: {fileID: 0}
   speedCamMove: 1
-  redy: 0
-  cartToInstace: {fileID: 5377769931026274499, guid: 27a4c945ea045c9479edfbd07aedd422, type: 3}
-  instaceCartsPoints: []
-  canvas: {fileID: 0}
-  menuPanel: {fileID: 0}
+  ObstacleCartToInstace: {fileID: 0}
+  instaceObstacleCartsPoints: []
   speddEffectImg: {fileID: 0}
   endPos: {fileID: 0}
-  lvProgressSlider: {fileID: 0}
   arrivedEndPos: 0
-  sliderActualLevel: {fileID: 0}
-  sliderNextLevel: {fileID: 0}
-  buttonGetCoin: {fileID: 0}
-  cointx2: {fileID: 0}
-  cointsTxt: {fileID: 0}
-  lvCompleted: {fileID: 0}
+  particleSys:
+  - {fileID: 8578201275120907588, guid: 4f7f399e1cb43334eb5f19e91efd66ad, type: 3}
+  - {fileID: 2724714365057204167, guid: 91e77c072176bfc4cbc016ff6fce16b1, type: 3}
+  - {fileID: 2898502399360044284, guid: 164d10ca72a9db1409d39a11eb24a133, type: 3}
+  - {fileID: 959829160015727636, guid: 70bcf3a0b65796d49a96066ba3d96b89, type: 3}

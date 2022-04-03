@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class ShoppingCarsHolder : MonoBehaviour
 {
+    //metodo para vidualizar los items de los carros al contactar con un producto
     public void GetProducts()
     {
-       // bool checking = true;
+        //Inicializa la lista con los carros activos
         List<GameObject> carsActive = new List<GameObject>();
         foreach (GameObject shoppingCars in GameManager.Instance.shoppingCarts)
         {
@@ -16,14 +17,9 @@ public class ShoppingCarsHolder : MonoBehaviour
             }
         }
 
-
-
-
-        //  CheckProducts(carsActive, 0);
-
         List<GameObject> productsCar = new List<GameObject>();
 
-
+//activa el primer item de cada carro antes de poder activar el segundo item
             int a = 0;
         for (int i=0; i< carsActive.Count;i++)
         {

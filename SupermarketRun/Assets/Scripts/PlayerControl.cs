@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerControl : MonoBehaviour
-
 {
+	//Script vinculado al PJ
+
 	public static PlayerControl Instance;
 	public float movespeed = 0.05f;
 	public Animator shopper;
@@ -16,9 +17,7 @@ public class PlayerControl : MonoBehaviour
 	private followPlayer Player;
 
 	private bool getingToMMMPos = false;
-[SerializeField]	private float MmmXPos; /*Getting X pos to center PJ pos on MMM */
-	/*[HideInInspector]
-	public bool pushed = false;*/
+	[SerializeField]	private float MmmXPos; /*Getting X pos to center PJ pos on MMM */
 
 
 	private void Awake()
@@ -28,7 +27,6 @@ public class PlayerControl : MonoBehaviour
 			Instance = this;
 		}
 	}
-	// Start is called before the first frame update
 	void Start()
     {
 		hitted = false;
@@ -39,7 +37,7 @@ public class PlayerControl : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-		
+		//Desplazamiento en la horizontal por teclado
 		if(Input.GetKey(KeyCode.A)&& hitted==false)
 		{
 			transform.Translate(new Vector3(-movespeed, 0, 0) * Time.deltaTime);
@@ -50,17 +48,7 @@ public class PlayerControl : MonoBehaviour
 			transform.Translate(new Vector3(movespeed, 0, 0) * Time.deltaTime);
 		}
 
-		/*Vector3 deltaPosition = transform.forward;
-		if (Input.touchCount > 0)
-		{
-			Vector3 touchPosition = Input.GetTouch(0).position;
-			if (touchPosition.x > Screen.width * 0.5f)
-				deltaPosition += transform.right * movespeed;
-			else
-				deltaPosition -= transform.right * movespeed;
-		}
-		transform.position += deltaPosition * Time.deltaTime;
-		*/
+		//Desplazamiento en la horizonatal por contacto o raton
 		if (Input.touchCount > 0 && GameManager.Instance.PlayerMove && hitted==false)
 		{
 			Touch touch = Input.GetTouch(0);
@@ -75,13 +63,15 @@ public class PlayerControl : MonoBehaviour
 
 		if(!GameManager.Instance.PlayerMove && !GameManager.Instance.isStartGame)
 		{
+			//Activa animacion de correr
 			shopper.SetFloat("run", 1);
 		}
-
+		 //lo puso el programador anterior, creo que no se uas. por lo que entiendo, hace Game Over si se midifica la altura del PJ
 		if(transform.position.y < -1f)
 		{
 			GameManager.Instance.InstantGameOver();
 		}
+		//coloca el PJ en la posicion central y ajusta la velocidad al llegar al MMM
 		if(getingToMMMPos ==true)
         {
 			transform.position = Vector3.Lerp(transform.position, (new Vector3(0, transform.position.y, transform.position.z)),1.5f*Time.deltaTime);
@@ -90,15 +80,13 @@ public class PlayerControl : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if(other.gameObject.tag == ("Shopper"))
-		{
-			/*Shopper shopper = other.gameObject.GetComponent<Shopper>();
-			shopper.GivePoints();*/ 
-		}
+		//Speed boster tras contactar con el booster
 		if(other.gameObject.CompareTag("SpeedBooster"))
         {
 			Player.BoastActivate();
         }
+
+		//Detrmina donde aparecera el NPC Nemesis en funcion del trigger que se contacte
 		if (other.gameObject.CompareTag("NemesisRespawnR"))
         {
 			Instantiate(GameManager.Instance.nemesisPrefab.gameObject, nemesisRespawnL.position, Quaternion.identity);
@@ -107,14 +95,20 @@ public class PlayerControl : MonoBehaviour
         {
 			Instantiate(GameManager.Instance.nemesisPrefab.gameObject, nemesisRespawnR.position, Quaternion.identity);
 		}
+
+		//Activa funciones correspondientes al chocar con los NPC
 		if (other.gameObject.CompareTag("Nemesis") && other.gameObject.GetComponent<Shopper>().hitted == false /*&& other.gameObject.GetComponent<Shopper>().nemesisLife > 0*/)
 		{
 			other.GetComponent<Shopper>().HittedNPC();
 		}
+
+		//Activa la aparicion de coches obstaculo
 		if(other.CompareTag("CartTrigger"))
         {
 			other.GetComponentInChildren <Animator>().SetTrigger("CartStart");
         }
+
+		//Activa componentes del segmento 2
 		if (other.CompareTag("Segment2Start"))
 		{
 			GameManager.Instance.moveCamToSeg2=true;
@@ -123,6 +117,8 @@ public class PlayerControl : MonoBehaviour
 			StartCoroutine(GameManager.Instance.SpeddEffectDecress());
 
 		}
+
+		//Activa componentes del segmento 3, MMM
 		if (other.CompareTag("Segment3Start"))
         {
 			getingToMMMPos = true;
@@ -133,11 +129,10 @@ public class PlayerControl : MonoBehaviour
 			Player.speed = Player.speedMMM;
 			GameManager.Instance.arrivedEndPos = true;
 			GameManager.Instance.moveCamToMMMPos = true;
-
-
 		}
 
 	}
+	//Creo q no se utiliza
     public IEnumerator HitedRecover()
     {
 		hitted = true;

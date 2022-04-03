@@ -3,6 +3,9 @@ using System.Collections;
 
 public class PlayerCam : MonoBehaviour
 {
+	//Ya no se utiliza el scrip
+
+
 
 	private Camera cam;
 	
