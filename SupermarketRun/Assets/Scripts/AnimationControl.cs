@@ -13,6 +13,8 @@ public class AnimationControl : MonoBehaviour
     private int coinsInstanciate;
     GameObject coinInstance;
 
+    //No utilizado
+
     private void Update()
     {
         if(animGetCoins)

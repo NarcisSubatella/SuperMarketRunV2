@@ -15,7 +15,8 @@ public class lvCompled : MonoBehaviour
     private Rigidbody[] RBs;
     [SerializeField] private Camera finishCam;
 
-    // Start is called before the first frame update
+    //No utiliazado
+
     void Start()
     {
         RBs = flyingGuy.transform.GetComponentsInChildren<Rigidbody>();
@@ -68,6 +69,6 @@ public class lvCompled : MonoBehaviour
         }
 
     }
-  //  private IEnumerator LvCompletWait()
+
 
 }

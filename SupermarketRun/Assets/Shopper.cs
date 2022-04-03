@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Shopper : MonoBehaviour
 {
+	//Gestion de NPCs
+
 	public enum ShopperType
 	{
 		CartShopper,
@@ -18,28 +20,28 @@ public class Shopper : MonoBehaviour
 	private Transform Pl;
 	private float plSpeed;
 	private float plSpeedPro;
-	private float fallingSpeed=4;
+	private float fallingSpeed=4;/*Relentizar la velocidad de caida para que se vean en pantalla*/
 
 	[SerializeField]private GameObject shoppingcart;
 	[SerializeField] private bool starting;
 	[SerializeField] private float timeToStart =0;
-	[SerializeField] private float distancePl;
+	private float distancePl;
+
 	[Header("Nemesis")]
 	public int nemesisLife = 3;
-	public Vector3 direction;
 	[SerializeField] private float pushForce;
-	public Transform[] productsOnCart;
-	public int productsCount;
+	public Transform[] productsOnCart; /*Hay q colocar los productos del carro del NPC Nemesis */
+	public int productsCount; /*Cantidad de veces que podemos quitarle productos */
 	private bool stop = false;
+	private Vector3 direction;
 
 
-	// Start is called before the first frame update
 	void Start()
 	{
 		starting = false;
 		if (type == ShopperType.CartShopper)
         {
-		shoppingcart = transform.Find("ShoppingCart").gameObject;
+		shoppingcart = transform.Find("ShoppingCart").gameObject; /*Encontrar su propio carro del NPC */
         }
 		if(type == ShopperType.Nemesis)
         {
@@ -67,26 +69,26 @@ public class Shopper : MonoBehaviour
         {
 			if(starting && stop==false)
             {
+				//recoge la distancia entre el Nemesis y el Player
 				Vector3 playerPos = new Vector3(0, 0, Pl.position.z);
 				Vector3 pos = new Vector3(0, 0, transform.position.z);
-
-				//distancePl = Vector3.Distance(Pl.position, transform.position);
 				distancePl = Vector3.Distance(playerPos, pos);
 
-				
 				if(nemesisLife>=1)
                 {
-
+					/*Si hay mucha distancia con el player, incrementa la velocidad del Nemesis */
 					if(distancePl>0.2f )
 					{
 					transform.Translate(new Vector3(0, 0, (plSpeed*1.2f)) * Time.deltaTime);
 					}
+					//si hay poca distancia con el player, el Nemesis iguala la velocidad del player
 					if (distancePl < 0.2f )
 					{
 
 					transform.Translate(new Vector3(0, 0, plSpeed) * Time.deltaTime);
 					}
                 }
+				//si no tiene vida, animacion de caida y se destruye
 				else
                 {
 					Destroy(transform.GetChild(0).gameObject, 4);
@@ -98,6 +100,7 @@ public class Shopper : MonoBehaviour
 				transform.Translate(new Vector3(0, 0, 0));
 			}
 		}
+		//activa la animacion de correr si la velocidad del nemesis es mayor de 0
 		if(shopperSpeed <= 0)
         {
 			animator.SetBool("Running", false);
@@ -106,6 +109,7 @@ public class Shopper : MonoBehaviour
 
 	public void GivePoints()
 	{
+		//contaviliza los carros activos
 		if(!pointisgiven)
 		{
 			if (type == ShopperType.CartShopper)
@@ -122,12 +126,13 @@ public class Shopper : MonoBehaviour
 		}
 		
 	}
+	// funcion que se activa al golpear NPCs
 	public void HittedNPC()
     {
 		if (type == ShopperType.CartShopper)
         {
-		GetComponent<Animator>().SetTrigger("Hitted");
-		Instantiate(GameManager.Instance.particleSys[1], (transform.position + new Vector3(0,1,0)), Quaternion.identity);
+		GetComponent<Animator>().SetTrigger("Hitted");/*Animacion caida*/
+		Instantiate(GameManager.Instance.particleSys[1], (transform.position + new Vector3(0,1,0)), Quaternion.identity); /*instacia particulas */
 		StartCoroutine(StopMoving());
 		Destroy(this.gameObject, 2);
         }
@@ -138,7 +143,7 @@ public class Shopper : MonoBehaviour
 			Vector3 posX = new Vector3(transform.position.x, 0, 0);
 			direction = posX - playerPosX;
 			Pl.GetComponent<PlayerControl>().StartCoroutine("HitedRecover");
-			GameManager.Instance.productsObtained++;
+			GameManager.Instance.productsObtained++; /*obtiene productos */
 			//controlar la direccion q recive el golpe
 			GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerControl>().productAnim.GetComponent<Animator>().SetTrigger("Take");
 				if (direction.x<0)
@@ -153,7 +158,7 @@ public class Shopper : MonoBehaviour
 				}
 			if(nemesisLife>1)
             {
-				nemesisLife--;
+				nemesisLife--; 
 				productsCount--;
 				ProductsControl();
             }
@@ -167,20 +172,14 @@ public class Shopper : MonoBehaviour
 		}
     }
 
-   /* private void OnTriggerStay(Collider other)
-    {
-		if (other.CompareTag("FollowGO") && type == ShopperType.Nemesis)
-        {
-			transform.Translate(new Vector3(0, 0, plSpeedPro) * Time.deltaTime);
-		}
-
-	}*/
-
+	//tiempo de espera para activas un NPC
     private IEnumerator waitToStart()
     {
 		yield return new WaitForSeconds(timeToStart);
 		starting = true;
     }
+
+	//controlña los productos activos
 	private void ProductsControl()
     {
 		for (int i = 0; i < productsOnCart.Length; i++)
@@ -195,6 +194,7 @@ public class Shopper : MonoBehaviour
 			}
 		}
 	}
+	//para los Npc Al llegar al final de un segmento
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Segment2Start")&& type== ShopperType.CartShopper)
@@ -207,6 +207,7 @@ public class Shopper : MonoBehaviour
 			stop = true;
 		}
 	}
+	//gestiona los tiempos de parada de los Npc
     private IEnumerator StopMoving()
     {
 		shopperSpeed = fallingSpeed;

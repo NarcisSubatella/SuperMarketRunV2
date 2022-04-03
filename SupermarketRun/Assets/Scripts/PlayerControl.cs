@@ -132,7 +132,7 @@ public class PlayerControl : MonoBehaviour
 		}
 
 	}
-	//Creo q no se utiliza
+	//tempo de espera para poder golpear de nuevo a un NPC Nemesis
     public IEnumerator HitedRecover()
     {
 		hitted = true;

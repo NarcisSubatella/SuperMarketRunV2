@@ -8,7 +8,8 @@ public class LvManager : MonoBehaviour
 {
     public static LvManager current;
     public int actualLevel;
-   // public int totalPoints;
+
+    [Header("Active to reset progression")]
     public bool resetProgress;
 
     
@@ -19,7 +20,7 @@ public class LvManager : MonoBehaviour
             
         DontDestroyOnLoad(current);
 
-      //PlayerPrefs.DeleteAll();
+        //Almacena en playerpref
       if(resetProgress==false)
         { 
             if (!PlayerPrefs.HasKey("CurrentLv"))
@@ -42,16 +43,6 @@ public class LvManager : MonoBehaviour
         {
             PlayerPrefs.DeleteAll();
         }
-
-      /*  if(PlayerPrefs.HasKey("CurrentLv") && actualLevel==0)
-        {
-            actualLevel = 1;
-        }*/
-        
-    }
-    private void Start()
-    {
-        
     }
     public void SceneChange()
     {
